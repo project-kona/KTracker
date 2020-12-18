@@ -3,6 +3,7 @@
 AUTO="### This file is generated automatically. Any changes will be lost. Please see Makefile.in and ../scripts/run_make_pbsim.sh"  
 PBSIM_HOME='../src'
 RESDIR_HOME='../results/'
+USER=`whoami`
 
 make_pbsim_cl() {
   echo "MAKE PBSim + CL tracking"

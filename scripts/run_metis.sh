@@ -4,6 +4,7 @@ source ./run_make_pbsim.sh
 
 THR=1
 TRACKER=$PBSIM_HOME/tracker
+METIS_HOME='../../apps/metis/Metis'
 
 RESDIR=$1/metis
 
@@ -18,6 +19,11 @@ HIST_INPUT_LARGE=hist-40g.bmp
 LR_INPUT=$LR_INPUT_LARGE
 HIST_INPUT=$HIST_INPUT_LARGE
 
+HIST_BIN=$METIS_HOME/obj/hist
+LR_BIN=$METIS_HOME/obj/linear_regression
+HIST_DATA=$METIS_HOME/data/$HIST_INPUT
+LR_DATA=$METIS_HOME/data/$LR_INPUT
+
 NUMACMD="numactl -N 0 -m 0"
 
 cleanup() {
@@ -26,7 +32,6 @@ cleanup() {
   sleep 2 
   sudo pkill -9 hist
   sudo pkill -9 linear
-  sudo pkill -9 -f run_writeprotect.sh
   sudo rm -f dcl_*.bin
   sudo rm -f res_pbsim_*.txt
   sync; echo 3 | sudo tee /proc/sys/vm/drop_caches
@@ -35,11 +40,11 @@ cleanup() {
 
 run_pbsim_lr() {
   cleanup
-  local cmd="$NUMACMD sudo $TRACKER -c ~/Metis/obj/linear_regression ~/Metis/data_tool/data/$LR_INPUT -p $THR > $RESDIR/output_metis_lr_pbsim_${THR}_$1_${LR_INPUT}.txt"
+  local cmd="$NUMACMD sudo $TRACKER -c $LR_BIN $LR_DATA -p $THR > $RESDIR/output_metis_lr_pbsim_${THR}_$1_${LR_INPUT}.txt"
   echo $cmd
   eval "$cmd"
-  sudo chown icalciu: dcl_*.bin 
-  sudo chown icalciu: res_pbsim_*.txt
+  sudo chown $USER: dcl_*.bin 
+  sudo chown $USER: res_pbsim_*.txt
   sudo mv dcl_*.bin $RESDIR/lr_dcl_${THR}_$1_${LR_INPUT}.bin
   sudo mv res_pbsim_*.txt $RESDIR/res_pbsim_lr_${THR}_$1_${LR_INPUT}.txt
   cleanup
@@ -47,11 +52,11 @@ run_pbsim_lr() {
 
 run_pbsim_hist() {
   cleanup 
-  local cmd="$NUMACMD sudo $TRACKER -c ~/Metis/obj/hist ~/Metis/data_tool/data/$HIST_INPUT -q -p $THR > $RESDIR/output_metis_hist_pbsim_${THR}_$1_${HIST_INPUT}.txt" 
+  local cmd="$NUMACMD sudo $TRACKER -c $HIST_BIN $HIST_DATA -q -p $THR > $RESDIR/output_metis_hist_pbsim_${THR}_$1_${HIST_INPUT}.txt" 
   echo $cmd
   eval "$cmd"
-  sudo chown icalciu: dcl_*.bin 
-  sudo chown icalciu: res_pbsim_*.txt
+  sudo chown $USER: dcl_*.bin 
+  sudo chown $USER: res_pbsim_*.txt
   sudo mv dcl_*.bin $RESDIR/hist_dcl_${THR}_$1_${HIST_INPUT}.bin
   sudo mv res_pbsim_*.txt $RESDIR/res_pbsim_hist_${THR}_$1_${HIST_INPUT}.txt
   cleanup
@@ -59,7 +64,7 @@ run_pbsim_hist() {
 
 run_lr() {
   cleanup
-  local cmd="$NUMACMD ~/Metis/obj/linear_regression ~/Metis/data_tool/data/$LR_INPUT  -p $THR > $RESDIR/output_metis_lr_orig_$THR_${LR_INPUT}.txt"
+  local cmd="$NUMACMD $LR_BIN $LR_DATA  -p $THR > $RESDIR/output_metis_lr_orig_$THR_${LR_INPUT}.txt"
   echo $cmd
   eval "$cmd"
   cleanup
@@ -67,7 +72,7 @@ run_lr() {
 
 run_hist() {
   cleanup
-  local cmd="$NUMACMD ~/Metis/obj/hist ~/Metis/data_tool/data/$HIST_INPUT -q -p $THR > $RESDIR/output_metis_hist_orig_$THR_${HIST_INPUT}.txt" 
+  local cmd="$NUMACMD $HIST_BIN $HIST_DATA -q -p $THR > $RESDIR/output_metis_hist_orig_$THR_${HIST_INPUT}.txt" 
   echo $cmd
   eval "$cmd"
   cleanup

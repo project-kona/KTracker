@@ -2,8 +2,8 @@
 
 source ./run_make_pbsim.sh
 
-REDIS_HOME='bin/redis/src'
-MEMTIER_HOME='bin/memtier_benchmark'
+REDIS_HOME='../../apps/redis/redis/src'
+MEMTIER_HOME='../../apps/redis/memtier_benchmark'
 
 RESDIR=$1/redis
 
@@ -22,7 +22,7 @@ cleanup() {
 
 run_redis() {
   cleanup
-  local cmd="${NUMACMD_REDIS} ${REDIS_HOME}/redis-server ${REDIS_HOME}/../redis_memory.conf"
+  local cmd="${NUMACMD_REDIS} ${REDIS_HOME}/redis-server ${REDIS_HOME}/../redis.conf"
   echo $cmd 
   eval "$cmd &"
   sleep 5
@@ -67,7 +67,7 @@ run_redis_rand_pbsim() {
   run_redis 
   run_pbsim
   run_memtier_rand pbsim_$1
-  sudo chown icalciu: dcl_*.bin res_pbsim_*.txt
+  sudo chown $USER: dcl_*.bin res_pbsim_*.txt
   sudo mv dcl_*.bin $RESDIR/redis_rand_dcl_$1.bin
   sudo mv res_pbsim_*.txt $RESDIR/res_pbsim_redis_rand_$1.txt
 }
@@ -77,7 +77,7 @@ run_redis_seq_pbsim() {
   run_redis
   run_pbsim 
   run_memtier_seq pbsim_$1 
-  sudo chown icalciu: dcl_*.bin res_pbsim_*.txt
+  sudo chown $USER: dcl_*.bin res_pbsim_*.txt
   sudo mv dcl_*.bin $RESDIR/redis_seq_dcl_$1.bin
   sudo mv res_pbsim_*.txt $RESDIR/res_pbsim_redis_seq_$1.txt
 }
@@ -102,10 +102,9 @@ run_redis_seq_large_orig() {
 
 ########################################################
 
-cp redis_memory.conf ${REDIS_HOME}/../
 mkdir -p $RESDIR
 sudo rm -f dcl_*.bin res_pbsim_*.txt
-sudo ./configure_redis.sh
+sudo $REDIS_HOME/../../configure_redis.sh
 
 
 ###### PBSIM ##################
