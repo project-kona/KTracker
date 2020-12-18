@@ -1,0 +1,37 @@
+DEFS=$(WP) $(WPTIME) $(PAUSED_TIME) $(NODT) $(DCL)
+LIBS=-lpthread -lnuma
+FLAGS=-g $(DEFS) -O3 
+SRC=numalib.c pagemap.c proc_maps.c ptimer.c common.c fpga_driver.c htable.c
+
+# software tracker (PBSim)
+tracker: 
+	gcc $(FLAGS) -o tracker tracker.c $(SRC) $(LIBS) 
+
+# tracker, with comparison submitted to Xilinx FPGA
+fpga:
+	gcc $(FLAGS) -o tracker_fpga tracker_fpga.c $(SRC) $(LIBS)
+
+# driver code, rewritten to use common functionality with the tracker
+driver:
+	gcc $(FLAGS) -o driver driver.c $(SRC) $(LIBS)
+
+
+
+# currently this is not up to date; FPGA executes all commands at once
+#test:
+#	gcc $(FLAGS) -o test_fpga test_fpga.c $(SRC) $(LIBS)
+
+
+# currently this is not up to date; FPGA executes all commands at once
+#test_malloc:
+#	gcc $(FLAGS) -o test_fpga_malloc test_fpga_malloc.c $(SRC) $(LIBS)
+
+
+# Licheng's original code
+simple:
+	gcc -o gen_phy_addr gen_phy_addr2.c
+
+
+
+clean:
+	rm -f *.o tracker gen_phy_addr tracker_fpga test_fpga driver test_fpga_malloc
