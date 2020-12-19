@@ -104,7 +104,8 @@ run_redis_seq_large_orig() {
 
 mkdir -p $RESDIR
 sudo rm -f dcl_*.bin res_pbsim_*.txt
-sudo $REDIS_HOME/../../configure_redis.sh
+source $REDIS_HOME/../../configure_redis.sh
+configure_redis
 
 
 ###### PBSIM ##################

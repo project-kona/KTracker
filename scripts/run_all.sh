@@ -9,4 +9,4 @@ make -p $RESDIR
 ./run_metis.sh $RESDIR
 ./run_turi.sh $RESDIR
 
-./create_graphs $RESDIR
+#./create_graphs $RESDIR

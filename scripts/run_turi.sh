@@ -3,7 +3,6 @@
 source ./run_make_pbsim.sh
 
 TURI_HOME='../../apps/turi'
-#VENV_HOME='../venv'
 
 RESDIR=$1/turi
 
@@ -42,7 +41,6 @@ run_turi_pbsim() {
 }
 
 
-#source $VENV_HOME/bin/activate
 mkdir -p $RESDIR
 
 ########### PBSIM ##############
@@ -51,6 +49,7 @@ CMD=(cl wp report_times)
 
 for cmd in ${CMD[@]}; do
   make_pbsim_$cmd
+  cp $PBSIM_HOME/tracker tracker
   
   run_turi_pbsim pagerank twitter $cmd
   run_turi_pbsim connectedcomp twitter $cmd
