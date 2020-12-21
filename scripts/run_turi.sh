@@ -55,5 +55,6 @@ for cmd in ${CMD[@]}; do
   run_turi_pbsim connectedcomp twitter $cmd
   run_turi_pbsim labelprop twitter $cmd
   run_turi_pbsim graphcol twitter $cmd
+  rm -f tracker
 done
 
