@@ -274,6 +274,7 @@ def savePlot(filename, fileContent, meta, iterFirstA = None, iterLastA = None):
 
 #################################################################3
 
+argc=len(sys.argv)
 if argc != 3:
   print("Usage: python3 {} <input_file> <output_data>".format(__file__))
 filename=sys.argv[1]

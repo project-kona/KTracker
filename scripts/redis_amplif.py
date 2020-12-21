@@ -8,8 +8,6 @@ import sys
 import math
 import csv
 
-DIR = sys.argv[1]
-
 DATA_RAND = []
 DATA_SEQ = []
 
@@ -47,9 +45,13 @@ def draw_line():
     # plt.show()
     return f
 
-# get_data(sys.argv[1])
+argc=len(sys.argv)
+if argc != 2:
+    print("Usage: python3 {} <input_dir>".format(__file__))
+DIR = sys.argv[1]
 dirname = os.path.dirname(os.path.realpath(__file__))
-DATA_RAND = get_data(os.path.join(dirname, DIR, 'redis_rand.dat'))
-DATA_SEQ = get_data(os.path.join(dirname, DIR, 'redis_seq.dat'))
+outdir=os.path.join(dirname, DIR)
+DATA_RAND = get_data(os.path.join(outdir, 'redis_rand.dat'))
+DATA_SEQ = get_data(os.path.join(outdir, 'redis_seq.dat'))
 f = draw_line()
-f.savefig(sys.argv[0].replace(".py", ".pdf"), bbox_inches='tight', pad_inches=0.0)
+f.savefig(os.path.join(outdir, "redis_amplif.pdf"), bbox_inches='tight', pad_inches=0.0)

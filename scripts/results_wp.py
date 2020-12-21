@@ -49,11 +49,11 @@ def draw_hist():
     # plt.show()
     return f
 
-if sys.argc != 2:
-  print("Please specify results directory!")
+argc=len(sys.argv)
+if argc != 2:
+    print("Usage: python3 {} <results_dir>".format(__file__))
 resdir = sys.argv[1]
-DIR = "../results/{}/plots/".format(resdir) 
 dirname = os.path.dirname(os.path.realpath(__file__))
-get_data(os.path.join(dirname, DIR, 'results_wp.dat'))
+get_data(os.path.join(dirname, resdir, 'results_wp.dat'))
 f = draw_hist()
-f.savefig(sys.argv[0].replace(".py", ".pdf"), bbox_inches='tight', pad_inches=0.0)
+f.savefig(os.path.join(resdir, "results_wp.pdf"), bbox_inches='tight', pad_inches=0.0)
