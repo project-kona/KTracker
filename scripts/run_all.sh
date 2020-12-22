@@ -11,4 +11,4 @@ sudo ./change_governor.sh
 ./run_metis.sh $RESDIR
 ./run_turi.sh $RESDIR
 
-./create_graphs $RESDIR
+./create_graphs.sh $RESDIR
