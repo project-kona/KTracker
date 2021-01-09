@@ -99,7 +99,6 @@ void find_dirty_data(pid_t pid, ProcInfo *procinf, int num_iter) {
           if (diff_cl) {
             memcpy(nextmem, page, PAGE_SIZE);
             num_dirty_cl += diff_cl;
-            //printf("%d\n", diff_cl);
             ++num_dirty_pages;
           }
           ++num_pages; 
@@ -108,11 +107,10 @@ void find_dirty_data(pid_t pid, ProcInfo *procinf, int num_iter) {
         nextmem += PAGE_SIZE;
       }
     }
-    //printf("Mapping start %p wrote %d pages\n", (void*)procinf->proc_mappings[i].vaddr_start, num_pages);
   }
 
 #if PB_WRITE_ITER_STATS
-  printf("===========>>>>>>>>> iteration %d DIRTY CACHE LINES %d PAGES %d writable size: %lu cl2pages %0.2f cl2all %0.2f pages2all %0.2f\n", 
+  printf("===========>>>>>>>>> iteration %d DIRTY CACHE LINES %d PAGES %d writable size: %lu cl2pages %0.2f cl2all %0.2f pages2all %0.2f\n",
       num_iter, num_dirty_cl, num_dirty_pages, procinf->size, 
       (double)num_dirty_cl*64*100/((double)num_dirty_pages * 4096), 
       (double)num_dirty_cl*64*100/procinf->size, 
@@ -120,9 +118,9 @@ void find_dirty_data(pid_t pid, ProcInfo *procinf, int num_iter) {
 #endif
 #if PB_WRITE_TEXT_OUTPUT
   char output[MAX_OUTPUT_LINE];
-  sprintf(output, "\niteration: %d\ndirty_cl: %d\ndirty_pages: %d\ncl2pages: %0.2f\nwritable_size: %lu\ncl2all: %0.2f\npages2all: %0.2f\n", 
-      num_iter, num_dirty_cl, num_dirty_pages, 
-      (double)num_dirty_cl*64*100/((double)num_dirty_pages * 4096), procinf->size, 
+  sprintf(output, "\niteration: %d\ndirty_cl: %d\ndirty_pages: %d\ncl2pages: %0.2f\nwritable_size: %lu\ncl2all: %0.2f\npages2all: %0.2f\n",
+      num_iter, num_dirty_cl, num_dirty_pages,
+      (double)num_dirty_cl*64*100/((double)num_dirty_pages * 4096), procinf->size,
       (double)num_dirty_cl*64*100/procinf->size,
       (double)num_dirty_pages*4096*100/procinf->size);
   print_output(pid, output);
@@ -130,9 +128,6 @@ void find_dirty_data(pid_t pid, ProcInfo *procinf, int num_iter) {
 
   htable_print(&htable, fd_dcl, num_iter);
 
-#if 0
-  htable.tail = 0;
-#endif
 #if PB_WRITE_DIRTYCL
   fclose(dirtyclfile); 
 #endif
@@ -152,7 +147,6 @@ uint8_t *xmmap_proc_mapping(size_t size) {
   return mem;
 }
 
-// TODO: munmap all this mess 
 void update_local_maps(ProcInfo *procinf, ProcInfo *procinf2, int num_iter) {
   uint32_t k = 0;
   uint32_t k2 = 0; 
@@ -297,7 +291,6 @@ void proc_trace(pid_t pid, pid_t *tid, size_t tids) {
 
 
 int main(int argc, char **argv) {
-
   _stop_requested = 0;
   _app_time = _paused_time = _wprotect_time = 0;
   _config.parent = 0;

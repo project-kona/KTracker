@@ -3,7 +3,7 @@ LIBS=-lpthread -lnuma
 FLAGS=-g $(DEFS) -O3 
 SRC=numalib.c pagemap.c proc_maps.c ptimer.c common.c htable.c
 
-# software tracker (PBSim)
+# software tracker (KTracker)
 tracker: 
 	gcc $(FLAGS) -o tracker tracker.c $(SRC) $(LIBS) 
 

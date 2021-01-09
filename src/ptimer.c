@@ -1,12 +1,6 @@
-///
-/// Precise Timer 
-///
-
-// See links below for details: 
+// See links below for details:
 // https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/ia-32-ia-64-benchmark-code-execution-paper.pdf
 // https://www.ccsl.carleton.ca/~jamuir/rdtscpm1.pdf
-
-// TODO(irina): timer start and end need to be called in the same processor to get results that make sense
 
 #include <stdint.h>
 #include <fcntl.h>
@@ -41,7 +35,7 @@
 // Read from 64-bit MSR
 uint64_t readMSR(uint32_t msr_id) {
   // If we can't read the MSR, we approximate the freq
-  uint64_t ret = 1000;
+  uint64_t ret = 2200;
   int fd = open("/dev/cpu/0/msr", O_RDONLY);
   if (fd == -1) {
     pr_error(errno, "readMSR");
@@ -68,19 +62,19 @@ uint32_t getFrequency() {
   uint8_t ratio = (readMSR(0xCE) >> 8) & 0xFF;
   // multiply by 100 to get frequency in MHz
   uint32_t totalFrequency = ratio * 100;
-  printf("CPU running at %u\n", totalFrequency); 
+  printf("CPU running at %u\n", totalFrequency);
   return totalFrequency;
 }
 
 
-void ptimer_init(PTimer *pt) { 
+void ptimer_init(PTimer *pt) {
   pt->_frequency = getFrequency();
   pt->_startT = pt->_stopT = 0;
 }
 
 
 
-void ptimer_reset(PTimer *pt) { 
+void ptimer_reset(PTimer *pt) {
   pt->_startT = pt->_stopT = 0;
 }
 
@@ -98,7 +92,7 @@ void ptimer_stop(PTimer *pt) {
   pt->_stopT = (((unsigned long long)(hi) << 32) | (lo) );
 }
 
-double getElapsed(PTimer *pt, double unitsRatio) { 
+double getElapsed(PTimer *pt, double unitsRatio) {
   u64 tm;
   tm = pt->_stopT - pt->_startT;
   return (double)tm / (pt->_frequency * unitsRatio);
@@ -115,4 +109,4 @@ double ptimer_getElapsedMSec(PTimer *pt) {
 double ptimer_getElapsedUSec(PTimer *pt) {
   return getElapsed(pt, 1.0);
 }
-                                      
+

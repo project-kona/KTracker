@@ -1,3 +1,7 @@
+## This is an example Makefile. 
+## The KTracker Makefile gets generated automatically from Makefile.in 
+## and *.config
+
 #WPTIME=-DGET_WP_TIME
 #PAUSED_TIME=-DGET_PAUSED_TIME -DGET_APP_TIME
 #PAUSED_TIME=-DGET_APP_TIME

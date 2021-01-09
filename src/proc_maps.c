@@ -45,7 +45,7 @@ intmax_t parse_maps_file(pid_t pid, ProcInfo *procinf, int num_iter) {
         const char *lib_name;
         size_t y;
         /* Parse a line from maps. Each line contains a range that contains many pages. */
-        {   
+        {
           /* low address */
           size_t x = i - 1;
           while (x && buffer[x] != '\n') x--;
@@ -80,7 +80,7 @@ intmax_t parse_maps_file(pid_t pid, ProcInfo *procinf, int num_iter) {
           x++;
           r_perm = w_perm = x_perm = 0;
           private = 0;
-          while(buffer[x] != ' ' && x < sizeof buffer) {
+          while (buffer[x] != ' ' && x < sizeof buffer) {
             char c = buffer[x++];
             if (c == 'r') r_perm = 1;
             else if (c == 'w') w_perm = 1;
@@ -91,7 +91,7 @@ intmax_t parse_maps_file(pid_t pid, ProcInfo *procinf, int num_iter) {
           /* skip 3 fields */
           for (int field = 0; field < 3; field++) {
             x++;
-            while(buffer[x] != ' ' && x < sizeof buffer) x++;
+            while (buffer[x] != ' ' && x < sizeof buffer) x++;
           }
 
           /* lib name */
@@ -121,9 +121,6 @@ intmax_t parse_maps_file(pid_t pid, ProcInfo *procinf, int num_iter) {
             /* we only keep VMAs we can read and that are writeable */
             ++k;
           }
-          ///printf("%20p   %20p %15lu  %d %d %d %d   %s\n", (void*)low, (void*)high, high - low, 
-          //   ///r_perm, w_perm, x_perm, private, procinf->proc_mappings[k].lib_name);
-          //  //++k;dd
         }
         buffer[y] = '\n';
 
@@ -133,7 +130,6 @@ intmax_t parse_maps_file(pid_t pid, ProcInfo *procinf, int num_iter) {
 
   procinf->num_proc_mappings = k;
   procinf->size = total_size;
-  //printf("Read %d mappings\n", procinf->num_proc_mappings);
   close(maps_fd);
   return total_size;
 }

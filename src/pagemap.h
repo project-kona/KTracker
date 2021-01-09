@@ -1,5 +1,3 @@
-/// pagemap.h
-
 #ifndef __PAGEMAP_H__
 #define __PAGEMAP_H__
 
@@ -29,6 +27,6 @@ int pagemap_get_entry(PagemapEntry *entry, int pagemap_fd, uintptr_t vaddr);
  * */
 int virt_to_phys_user(uintptr_t *paddr, pid_t pid, uintptr_t vaddr);
 
-uint64_t parse_pagemap_file(pid_t pid, uint64_t vaddr); 
+uint64_t parse_pagemap_file(pid_t pid, uint64_t vaddr);
 
 #endif  // __PAGEMAP_H__

@@ -1,5 +1,3 @@
-// util.h
-
 #ifndef __UTIL_H__
 #define __UTIL_H__
 
@@ -29,10 +27,10 @@
 #define pr_debug(fmt, ...)          \
     do {              \
           fprintf(stderr, "%s : %d : " fmt "\n",    \
-                    __func__, __LINE__, ##__VA_ARGS__ );  \
+                    __func__, __LINE__, ##__VA_ARGS__);  \
         } while (0)
 #else
-#define pr_debug(fmt, ...)          
+#define pr_debug(fmt, ...)
 #endif
 
 
@@ -44,7 +42,7 @@
 
 
 #define CACHE_LINE    64
-#define CACHE_ALIGN   __attribute__((aligned(CACHE_LINE))) 
+#define CACHE_ALIGN   __attribute__((aligned(CACHE_LINE)))
 
 #define CL_SHIFT  (6)
 #define CL_SIZE   (1ull << CL_SHIFT)
@@ -62,15 +60,15 @@ typedef int8_t  i8;
 
 
 struct PaddedUInt {
-	u32 val;
-	char pad_[CACHE_LINE - sizeof(u32)];
+  u32 val;
+  char pad_[CACHE_LINE - sizeof(u32)];
 } CACHE_ALIGN;
 
 
 
 struct PaddedVolatileUInt {
-	volatile u32 val;
-	char pad_[CACHE_LINE - sizeof(u32)];
+  volatile u32 val;
+  char pad_[CACHE_LINE - sizeof(u32)];
 } CACHE_ALIGN;
 
 

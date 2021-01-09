@@ -1,7 +1,5 @@
-parsing proc maps and pagemap files from:
+parsing proc maps and pagemap files from (proc_maps.c, pagemap.c):
 https://stackoverflow.com/questions/6284810/proc-pid-pagemaps-and-proc-pid-maps-linux
 
 parsing /proc/PID/task directory from:
 https://stackoverflow.com/questions/18577956/how-to-use-ptrace-to-get-a-consistent-view-of-multiple-threads
-
-

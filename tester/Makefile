@@ -1,5 +1,5 @@
 dirtymem: 
-	gcc -o dirtymem dirtymem.c
+	gcc -o tester tester.c
 
 clean:
-	rm -f dirtymem dirtymem.o
+	rm -f tester tester.o

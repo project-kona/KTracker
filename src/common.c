@@ -36,7 +36,7 @@ void print_final_stats(pid_t pid) {
   sprintf(resultsfilename, "res_pbsim_%d.txt", pid);
   FILE *resultsfile = fopen(resultsfilename, "w");
 
-  sprintf(output, "Iterations:%lu\nApp_time_ms:%.4f\nPaused_time_ms:%.4f\nWp_time_ms:%.4f\n", 
+  sprintf(output, "Iterations:%lu\nApp_time_ms:%.4f\nPaused_time_ms:%.4f\nWp_time_ms:%.4f\n",
           _num_iter, _app_time/1000, _paused_time, _wprotect_time/1000);
 
   fprintf(resultsfile, "%s", output);
@@ -49,18 +49,6 @@ void sigint_handler(int sig) {
   printf("\nPBSim: Goodbye!\n");
 
   _stop_requested = 1;
-
-#if 0
-  print_final_stats();
-
-  pr_debug("sigint");
-  r = sigaction(SIGINT, &old_sigint_action, NULL);
-  if (r < 0) {
-    printf("sigaction failed\n");
-    exit(0);
-  }
-  exit(0);
-#endif
 }
 
 int register_signal_handler(void) {
@@ -84,16 +72,16 @@ pid_t process_input(int argc, char *argv[]) {
   int opt;
   pid_t pid;
 
-   while ((opt = getopt(argc, argv, "hp:c:")) != -1) {
+  while ((opt = getopt(argc, argv, "hp:c:")) != -1) {
     if (_config.parent == 1)
       /* remaining arguments are for the child process */
       break;
-    switch(opt) {
+    switch (opt) {
       case 'h':
         usage(argc, argv);
         return 0;
       case 'p':
-        printf("PBSim not running as parent\n");
+        printf("KTracker not running as parent\n");
         if (argc != 3) usage(argc, argv);
         pid = strtoull(optarg, NULL, 0);
         if (pid <= 0) {
@@ -103,7 +91,7 @@ pid_t process_input(int argc, char *argv[]) {
         break;
       case 'c':
         _config.parent = 1;
-        printf("PBSim running as parent\n");
+        printf("KTracker running as parent\n");
         pid = start_child(optarg, &(argv[2]));
         if (pid <= 0) {
           printf("Could not start child process %s\n", optarg);
@@ -115,8 +103,7 @@ pid_t process_input(int argc, char *argv[]) {
     }
   }
 
- return pid;
-
+  return pid;
 }
 
 
@@ -144,7 +131,7 @@ void close_memdump_file(int fd) {
 #ifdef PB_MEMDUMP
   close(fd);
 #endif
-} 
+}
 
 
   /********* Write dirty cache lines to bin file *******/
@@ -369,7 +356,7 @@ void timer_app_stop(PTimer *pt, pid_t pid) {
   char output[MAX_OUTPUT_LINE];
   sprintf(output, "app_time_us: %.4f\n", elapsed);
   print_output(pid, output);
-  
+
   sprintf(output, "total_app_time_us: %.4f\n", _app_time);
   print_output(pid, output);
 #endif
@@ -395,7 +382,7 @@ void timer_paused_stop(PTimer *pt, pid_t pid) {
   char output[MAX_OUTPUT_LINE];
   sprintf(output, "paused_time_ms: %.4f\n", elapsed);
   print_output(pid, output);
-  
+
   sprintf(output, "total_paused_time_ms: %.4f\n", _paused_time);
   print_output(pid, output);
 #endif
@@ -456,7 +443,7 @@ void proc_seize(pid_t pid) {
 }
 
 void proc_attach(pid_t pid) {
-  int r = ptrace(PTRACE_ATTACH, pid, 0, 0); 
+  int r = ptrace(PTRACE_ATTACH, pid, 0, 0);
   if (r <0) assert(0);
   r = waitpid(pid, NULL, 0);
   if (r < 0) assert(0);
@@ -475,7 +462,7 @@ void proc_resume(pid_t pid, int signal) {
   pr_debug("Resuming process %d\n", pid);
   int r = ptrace(PTRACE_CONT, pid, 0, signal);
   if (r < 0) {
-    perror("can't resume process"); 
+    perror("can't resume process");
     printf("Can't resume process %d\n", pid);
     return;
   }
@@ -487,7 +474,7 @@ void proc_resume_all(pid_t pid, pid_t *loc_tid, size_t loc_tids) {
   write_protect_pages(pid);
   timer_app_start(&_app_timer, pid);
   for (int i = 0; i < tids; ++i) {
-    if (tid[i] != 0) 
+    if (tid[i] != 0)
       proc_resume(tid[i], 0);
   }
   timer_paused_stop(&_paused_timer, pid);
@@ -514,26 +501,24 @@ int proc_is_new(pid_t pid) {
 }
 
 int proc_check_status(pid_t pid) {
-  int status = 0; 
+  int status = 0;
   pid_t newpid = 0;
-  pid_t curpid = pid; 
+  pid_t curpid = pid;
   int r = 0;
   while (1) {
     r = 0;
     if (pid) {
-      //printf("I'm going to wait for pid %d\n", pid);
       r = waitpid(pid, &status, 0);
       pr_debug("waitpid response %d pid %d\n", r, pid);
       assert(r == pid);
     } else {
-      //printf("I'm going to wait for any pid\n");
       r = waitpid(-1, &status, WNOHANG);
       assert(r >= 0);
       if (r == 0) {
         pr_debug("Children didn't change state!\n");
         break;
       }
-    } 
+    }
     curpid = r;
     if (WIFEXITED(status) || WIFSIGNALED(status)) {
       printf("Child %d finished execution\n", curpid);
@@ -544,31 +529,31 @@ int proc_check_status(pid_t pid) {
     } else if (WIFSTOPPED(status)) {
       int signal = WSTOPSIG(status);
       pr_debug("Child stopped by signal %d\n", signal);
-      if (status>>8 == (SIGTRAP | (PTRACE_EVENT_EXIT<<8))) {
+      if (status >> 8 == (SIGTRAP | (PTRACE_EVENT_EXIT << 8))) {
         printf("Child TRACEEXIT detected for pid %d!\n", curpid);
         proc_mark_exited(curpid);
         proc_resume(curpid, 0);
-      } else if (status>>8 == (SIGTRAP | (PTRACE_EVENT_FORK<<8))) {
+      } else if (status >> 8 == (SIGTRAP | (PTRACE_EVENT_FORK << 8))) {
         printf("Child Event Fork detected for pid %d\n", curpid);
-      } else if (status>>8 == (SIGTRAP | (PTRACE_EVENT_VFORK<<8))) {
+      } else if (status >> 8 == (SIGTRAP | (PTRACE_EVENT_VFORK << 8))) {
         printf("Child event Vfork detected for pid %d\n", curpid);
-      } else if (status>>8 == (SIGTRAP | (PTRACE_EVENT_VFORK_DONE<<8))) {
+      } else if (status >> 8 == (SIGTRAP | (PTRACE_EVENT_VFORK_DONE << 8))) {
         printf("Child event vfork_done detected for pid %d\n", curpid);
-      } else if (status>>8 == (SIGTRAP | (PTRACE_EVENT_EXEC<<8))) {
+      } else if (status >> 8 == (SIGTRAP | (PTRACE_EVENT_EXEC << 8))) {
         printf("Child Event Exec detected for pid %d\n", curpid);
-        // TODO: we continue, because OK for case where PBSim runs in parent mode
+        // TODO: we continue, because OK for case where KTracker runs in parent mode
         // but otherwise we need to do more work (destroy potential threads, etc.)
         /* if we're waiting for this thread and it performed an exec at the same time with pause, 
            it might not get the pause */
         if (curpid == pid) pid = 0;
         else proc_resume(curpid, 0);
-      } else if (status >>8 == (SIGTRAP | (PTRACE_EVENT_SECCOMP<<8))) {
+      } else if (status >> 8 == (SIGTRAP | (PTRACE_EVENT_SECCOMP << 8))) {
         printf("Child Event Seccomp detected for pid %d\n", curpid);
-      } else if (status>>8 == (SIGTRAP | (PTRACE_EVENT_CLONE<<8))) {
+      } else if (status>> 8 == (SIGTRAP | (PTRACE_EVENT_CLONE << 8))) {
         ptrace(PTRACE_GETEVENTMSG, r, NULL, &newpid);
         printf("Child event clone detected for pid %d, with child pid %d\n", curpid, newpid);
         proc_resume(curpid, 0);
-      } else if (status >>8 == (SIGTRAP | (PTRACE_EVENT_STOP<<8))) {
+      } else if (status >> 8 == (SIGTRAP | (PTRACE_EVENT_STOP << 8))) {
         if (proc_is_new(curpid)) {
           pr_debug("Ptrace_Event_stop detected (automatically attached child pid %d)\n", curpid);
           tids = add_tid(&tid, &tids_max, tids, curpid);
@@ -582,7 +567,7 @@ int proc_check_status(pid_t pid) {
       } else if (proc_is_stopping_signal(signal)) {
         /* TODO: could be group-stop */
         printf("Potential group-stop (not handled right now) %d\n", signal);
-        proc_resume(curpid, signal); 
+        proc_resume(curpid, signal);
       } else {
         /* TODO: other stop events are possible */
         pr_debug("Child unknown stop event detected %d signal %d for pid %d \n", status >> 8, signal, curpid);
@@ -593,7 +578,7 @@ int proc_check_status(pid_t pid) {
       } else {
         pr_debug("Child pid %d  changed state, but didn't stop\n", curpid);
       }
-    } 
+    }
 }
 
 int proc_pause(pid_t pid, int index) {
@@ -606,8 +591,8 @@ int proc_pause(pid_t pid, int index) {
       perror("Can't pause tracee!");
       return 0;
     } else {
-      pr_debug("PTRACE_INTERRUPT returned %d\n", r); 
-  
+      pr_debug("PTRACE_INTERRUPT returned %d\n", r);
+
       proc_check_status(pid);
 
       pr_debug("Process %d paused\n", pid);
@@ -616,7 +601,7 @@ int proc_pause(pid_t pid, int index) {
   } else {
     printf("Cannot pause process %d, already finished\n", pid);
     return 0;
-  } 
+  }
 }
 
 
@@ -666,7 +651,7 @@ void get_numa_config() {
   u32 max_node = numa_max_node();
   u32 max_cores = numa_num_configured_cpus();
   u32 k = 0;
- 
+
   _parent_core = _child_core = 0;
   if (max_node == 0) {
     if (max_cores > 1) {
@@ -677,7 +662,7 @@ void get_numa_config() {
     /* put child on node 0 */
     numa_node_to_cpus(0, mask);
     _child_core = 0;
-    for (u32 j = 0; j < max_cores; ++j) { 
+    for (u32 j = 0; j < max_cores; ++j) {
       if (numa_bitmask_isbitset(mask, j)) {
         _child_core = j;
         break;
@@ -687,7 +672,7 @@ void get_numa_config() {
     /* put tracker on node 1 */
     numa_node_to_cpus(1, mask);
     _parent_core = 0;
-    for (u32 j = 0; j < max_cores; ++j) { 
+    for (u32 j = 0; j < max_cores; ++j) {
       if (numa_bitmask_isbitset(mask, j)) {
         _parent_core = j;
         break;
@@ -711,16 +696,6 @@ pid_t start_child(const char *cmd, char * const args[]) {
     printf("Child: running on core %d\n", _child_core);
 #endif
     sleep(1);
-#if 0
-    int r = ptrace(PTRACE_TRACEME, 0, 0, 0);
-    if (r < 0) {
-      perror("Child: Couldn't enable ptrace in child, child exiting...");
-      exit(1);
-    }
-    printf("Child: done with ptrace, going to raise SIGSTOP\n");
-    raise(SIGSTOP);
-    printf("Child: not stopped anymore\n");
-#endif 
 
     int r = execvp(cmd, args);
     if (r < 0) {
@@ -733,20 +708,6 @@ pid_t start_child(const char *cmd, char * const args[]) {
     printf("Parent: running on core %d\n", _parent_core);
 #endif
     printf("Parent: Child pid is: %d\n", pid);
-
-#if 0
-    int status;
-    printf("Parent: waiting for child\n");
-    int r = waitpid(pid, &status, 0);
-    assert(r == pid);
-    printf("Parent: Waitpid status is %d %d %d\n", status, WIFSTOPPED(status), WSTOPSIG(status));
-    //proc_setoptions(pid, PTRACE_O_TRACEEXEC | PTRACE_O_TRACEEXIT);
-    // TODO: this is temporary, this is not the best place to start the timer
-    timer_paused_start(&_paused_timer, pid);
-    proc_detach(pid);
-    // TODO: there is a race here, if child executes execvp before parent executes seize, child will not stop... 
-    proc_seize(pid);
-#endif 
 
     return pid;
   }

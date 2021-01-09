@@ -1,14 +1,15 @@
+#!/usr/bin/env python3
+
 import sys
 import struct
 import pandas as pd
 
 import matplotlib
-matplotlib.use('Agg') # Must be before importing matplotlib.pyplot or pylab!
+# Must be before importing matplotlib.pyplot or pylab!
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from matplotlib.ticker import MaxNLocator
-#import numpy as np
-
 
 ###############################################
 dsize = 16
@@ -259,7 +260,6 @@ def savePlotBar(df, filename, iterFirst, iterLast):
 def doSaveCSV(data, filename, unique, iterFirst, iterLast):
   name = filename
   print("Saving data to file: {}".format(name))
-  #data.to_csv(r'file.txt', header=None, index=None, sep=' ', mode='w')
   data.to_csv(name, sep=' ', mode='w')
 
 

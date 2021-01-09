@@ -1,4 +1,3 @@
-/// proc_maps.h
 #ifndef __PROC_MAPS_H__
 #define __PROC_MAPS_H__
 
@@ -29,6 +28,6 @@ struct ProcInfo_ {
 };
 typedef struct ProcInfo_ ProcInfo;
 
-intmax_t parse_maps_file(pid_t pid, ProcInfo *procinf, int num_iter); 
+intmax_t parse_maps_file(pid_t pid, ProcInfo *procinf, int num_iter);
 
 #endif  // __PROC_MAPS_H__
