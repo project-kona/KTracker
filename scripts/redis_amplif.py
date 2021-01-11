@@ -20,7 +20,7 @@ def get_data(filename):
             i += 1
             if i == 0:
                 continue
-            d = d[0].split(' ')[1]
+            d = d[0].split(' ')[4]
             DATA.append(float(d))
     return DATA
 
