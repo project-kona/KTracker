@@ -8,6 +8,8 @@ METISDIR_1='metis'
 REDISDIR='redis'
 TURIDIR='turi'
 
+set -x 
+
 mkdir -p $OUTDIR
 
 # parse output data and create graphs 

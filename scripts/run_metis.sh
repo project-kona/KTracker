@@ -52,7 +52,7 @@ run_pbsim_lr() {
 
 run_pbsim_hist() {
   cleanup 
-  local cmd="$NUMACMD sudo $TRACKER -c $HIST_BIN $HIST_DATA -q -p $THR > $RESDIR/output_metis_hist_pbsim_${THR}_$1_${HIST_INPUT}.txt" 
+  local cmd="$NUMACMD sudo $TRACKER -c $HIST_BIN $HIST_DATA -p $THR > $RESDIR/output_metis_hist_pbsim_${THR}_$1_${HIST_INPUT}.txt" 
   echo $cmd
   eval "$cmd"
   sudo chown $USER: dcl_*.bin 
@@ -72,7 +72,7 @@ run_lr() {
 
 run_hist() {
   cleanup
-  local cmd="$NUMACMD $HIST_BIN $HIST_DATA -q -p $THR > $RESDIR/output_metis_hist_orig_$THR_${HIST_INPUT}.txt" 
+  local cmd="$NUMACMD $HIST_BIN $HIST_DATA -p $THR > $RESDIR/output_metis_hist_orig_$THR_${HIST_INPUT}.txt" 
   echo $cmd
   eval "$cmd"
   cleanup
