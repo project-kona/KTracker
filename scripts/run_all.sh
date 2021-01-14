@@ -3,7 +3,7 @@
 source ./run_make_pbsim.sh
 RESDIR=$RESDIR_HOME/res_$(date +%Y-%m-%d_%H-%M-%S)
 
-make -p $RESDIR
+mkdir -p $RESDIR
 
 sudo ./change_governor.sh
 
