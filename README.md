@@ -1,6 +1,7 @@
 # KTracker  
 
-KTracker is a ptrace based tracer that determines an application's cache-line granularity write set in fixed time windows. Details about KTracker are in the ASPLOS 2021 paper: [Rethinking Software Runtimes for Disaggregated Memory](https://asplos-conference.org/abstracts/asplos21-paper210-extended_abstract.pdf). 
+KTracker is a ptrace based tracer that determines an application's cache-line granularity write set in fixed time windows.  
+Details about KTracker are in the ASPLOS 2021 paper: [Rethinking Software Runtimes for Disaggregated Memory](https://asplos-conference.org/abstracts/asplos21-paper210-extended_abstract.pdf).   
 The artifacts and instructions are available from: [asplos21-ae](https://github.com/project-kona/asplos21-ae).
 
 
@@ -10,7 +11,7 @@ KTracker tracks an application's write set at cache-line granularity by comparin
 
 KTracker uses an alternative approach to fork and copy-on-write to snapshot an application’s memory. While a copy-on-write approach would be faster than KTracker, it also has side-effects on the running applications by causing write page faults. While the application runs at full speed during the execution, KTracker suffers from overheads in doing the diffs. KTracker can also run in write-protection mode, where it write-protects pages to track which pages have changed, emulating the virtual memory copy-on-write mechanism. 
 
-![KTracker](https://github.com/project-kona/KTracker/blob/main/img/ktracker.pdf "KTracker")
+![KTracker](img/ktracker.pdf "KTracker")
 
 
 ## Instructions  
