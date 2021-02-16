@@ -1,3 +1,6 @@
+// Copyright © 2018-2021 VMware, Inc. All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,3 +1,6 @@
+// Copyright © 2018-2021 VMware, Inc. All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,7 +49,7 @@ void print_final_stats(pid_t pid) {
 void sigint_handler(int sig) {
   int r = 0;
   ASSERT(sig == SIGINT);
-  printf("\nPBSim: Goodbye!\n");
+  printf("\nKTracker: Goodbye!\n");
 
   _stop_requested = 1;
 }

@@ -1,3 +1,6 @@
+// Copyright © 2018-2021 VMware, Inc. All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+
 #ifndef __PTIMER_H__
 #define __PTIMER_H__
 

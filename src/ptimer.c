@@ -1,3 +1,6 @@
+// Copyright © 2018-2021 VMware, Inc. All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+
 // See links below for details:
 // https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/ia-32-ia-64-benchmark-code-execution-paper.pdf
 // https://www.ccsl.carleton.ca/~jamuir/rdtscpm1.pdf
